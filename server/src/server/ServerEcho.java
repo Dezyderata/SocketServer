@@ -9,9 +9,7 @@ public class ServerEcho {
 	private String hostName;
 	ServerSocket server;
 	Socket clientSocket;
-	BufferedReader in;
 	BufferedReader stdIn;
-	PrintWriter out;
 	
 	public ServerEcho(int portNumber, String hostName) {
 		this.hostName = hostName;
@@ -29,9 +27,10 @@ public class ServerEcho {
 					if(this.stdIn.ready()) {
 						flag = this.stdIn.readLine().equalsIgnoreCase("exit");
 					}else if(!(this.clientSocket = server.accept()).isClosed()) {
-						this.in = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
-						this.out = new PrintWriter(this.clientSocket.getOutputStream(), true);
-						answer();
+						//this.in = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
+						//this.out = new PrintWriter(this.clientSocket.getOutputStream(), true);
+						//answer();
+						new Thread(new ServerEchoThread(clientSocket)).start();
 					}
 				}catch(SocketTimeoutException e) {
 				}
@@ -46,7 +45,7 @@ public class ServerEcho {
 			server.close();
 		}
 	}
-	public void answer() {
+	/*public void answer() {
 		String newLine;
 		try {
 			while((newLine = in.readLine()) != null){
@@ -56,5 +55,5 @@ public class ServerEcho {
 			System.err.println("Something went wrong during readLine!");
 			e.printStackTrace();
 		}		
-	}
+	}*/
 }
